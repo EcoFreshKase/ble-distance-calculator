@@ -1,18 +1,31 @@
 #include <Arduino.h>
+#include "BluetoothSerial.h"
 
-// put function declarations here:
-int myFunction(int, int);
+BluetoothSerial SerialBT;
+
+boolean isNewLine(int data);
+int incrementData(int data);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(115200);
+  SerialBT.begin("esp-bounce-back");
+  Serial.println("Device is ready for connection.");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  if (SerialBT.available()) {
+
+    int data = SerialBT.read();
+    Serial.printf("Received: %d\n",data);
+    SerialBT.write(incrementData(data));
+  }
+  delay(25);
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+int incrementData(int data) {
+  return isNewLine(data) ? data : (data + 1) % 256;
+}
+
+boolean isNewLine(int data) {
+  return data == 13 || data == 10;
 }
