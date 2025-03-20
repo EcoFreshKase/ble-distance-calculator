@@ -1,0 +1,15 @@
+https://docs.esp-rs.org/book/
+
+# Setup Toolchain
+
+1. Install Rust
+2. cargo install espup
+3. espup install
+4. cargo install ldproxy (for std development)
+
+# Setup Project
+
+(no_std developing)
+1. cargo install esp-generate
+2. cargo install espflash
+3. esp-generate --chip=esp32 someproject
