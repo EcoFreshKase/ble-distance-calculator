@@ -16,7 +16,7 @@ void loop() {
   if (SerialBT.available()) {
 
     int data = SerialBT.read();
-    Serial.printf("Received: %d\n",data);
+    Serial.println("Received: " + String(data));
     SerialBT.write(incrementData(data));
   }
   delay(25);
