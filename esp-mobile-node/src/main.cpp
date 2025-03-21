@@ -1,9 +1,21 @@
 #include <Arduino.h>
 #include "BluetoothSerial.h"
+#include "main.h"
 
 BluetoothSerial SerialBT;
 int BUTTON_PIN = 18;
 boolean lastButtonState = false;
+boolean connected = false;
+
+boolean connectToBounceBackController() {
+  Serial.println("Connecting to bounce back controller....");
+  if (!SerialBT.connect(DEVICE_NAME_ESP_BOUNCE_BACK)) {
+    Serial.println("Failed to connect to bounce back controller.");
+    return false;
+  };
+  Serial.println("Connected to bounce back controller.");
+  return true;
+}
 
 void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -12,14 +24,18 @@ void setup() {
   SerialBT.begin("esp-mobile-node", true);
   
   // Setup connection to bounce back controller
-  if (!SerialBT.connect("esp-bounce-back")) {
-    Serial.println("Failed to connect to bounce back controller.");
-    abort();
-  };
-  Serial.println("Connected to bounce back controller.");
+  unsigned long startTime = millis();
+  connected = connectToBounceBackController();
+  while (!connected && (millis() - startTime) < 30000) {
+    connected = connectToBounceBackController();
+  }
+
+  if (!connected) {
+    Serial.println("Failed to connect to bounce back controller. Restarting device....");
+    ESP.restart();
+  }  
 
   Serial.println("Device is ready for action.");
-
 }
 
 void loop() {
