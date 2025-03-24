@@ -36,7 +36,7 @@ void setup() {
 
 void loop() {
   boolean buttonState = digitalRead(BUTTON_PIN) == LOW;
-  if (!lastButtonState && buttonState) {
+  if (!lastButtonState && buttonState && !experimentOngoing) {
     Serial.println("Starting Experiment.");
     experimentOngoing = true;
     experimentStartTime = millis();
@@ -49,7 +49,7 @@ void loop() {
     // Is device currently waiting for a response
     if (experimentReceiving) {
       if (SerialBT.available()) {
-        SerialBT.read();
+        SerialBT.flush();
 
         experimentCounter++;
         experimentReceiving = false;
@@ -69,7 +69,6 @@ void loop() {
       SerialBT.flush();
     }
   }
-  delay(25);
 }
 
 boolean connectToBounceBackController() {

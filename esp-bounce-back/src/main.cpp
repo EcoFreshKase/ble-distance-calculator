@@ -4,7 +4,6 @@
 BluetoothSerial SerialBT;
 
 boolean isNewLine(int data);
-int incrementData(int data);
 
 void setup() {
   Serial.begin(115200);
@@ -14,16 +13,11 @@ void setup() {
 
 void loop() {
   if (SerialBT.available()) {
-
-    int data = SerialBT.read();
-    Serial.println("Received: " + String(data));
-    SerialBT.write(incrementData(data));
+    int data = SerialBT.read(); 
+    if (!isNewLine(data)) {
+      SerialBT.write(data);
+    }
   }
-  delay(25);
-}
-
-int incrementData(int data) {
-  return isNewLine(data) ? data : (data + 1) % 256;
 }
 
 boolean isNewLine(int data) {
