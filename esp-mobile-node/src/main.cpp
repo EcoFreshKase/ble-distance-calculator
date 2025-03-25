@@ -7,11 +7,12 @@ boolean lastButtonState = false;
 boolean connected = false;
 
 boolean experimentOngoing = false;
-int experimentCounter = 0;
+int experimentCounter = 1;
 boolean experimentReceiving = false;
 unsigned long experimentStartTime = 0;
 
 boolean connectToBounceBackController();
+void restartExperiment();
 
 void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -35,13 +36,19 @@ void setup() {
 }
 
 void loop() {
-  boolean buttonState = digitalRead(BUTTON_PIN) == LOW;
-  if (!lastButtonState && buttonState && !experimentOngoing) {
-    Serial.println("Starting Experiment.");
-    experimentOngoing = true;
-    experimentStartTime = millis();
-  };
-  lastButtonState = buttonState;
+
+
+  // Start Experiment Section
+  if (!experimentOngoing) {
+    boolean buttonState = digitalRead(BUTTON_PIN) == LOW;
+    if (!lastButtonState && buttonState && !experimentOngoing) {
+      Serial.println("Starting Experiment.");
+      experimentOngoing = true;
+      experimentStartTime = millis();
+    };
+    lastButtonState = buttonState;
+  }
+
 
   // Experiment Section
   if (experimentOngoing) {
@@ -49,24 +56,30 @@ void loop() {
     // Is device currently waiting for a response
     if (experimentReceiving) {
       if (SerialBT.available()) {
-        SerialBT.flush();
+        int data = SerialBT.read();
+        // if (data != experimentCounter - 1) {
+        //   DEBUG_PRINT("Received signal %d, but expected %d. Restarting experiment....\n", data, experimentCounter - 1);
+        //   restartExperiment();
+        //   return;
+        // }
 
         experimentCounter++;
         experimentReceiving = false;
+
+        DEBUG_PRINT("Received signal %d.\n", experimentCounter);
       }
     } else {
-      SerialBT.write(experimentCounter);
+      SerialBT.write(0b11111111);
       experimentReceiving = true;
       experimentCounter++;
+
+      DEBUG_PRINT("Sent signal %d.\n", experimentCounter);
     }
 
     // End experiment
-    if (experimentCounter > EXPERIMENT_NUM_SIGNALS) {
+    if (experimentCounter >= EXPERIMENT_NUM_SIGNALS) {
       Serial.printf("Experiment completed after %dms.\n", millis() - experimentStartTime);
-      experimentOngoing = false;
-      experimentReceiving = false;
-      experimentCounter = 0;
-      SerialBT.flush();
+      restartExperiment();
     }
   }
 }
@@ -79,4 +92,12 @@ boolean connectToBounceBackController() {
   };
   Serial.println("Connected to bounce back controller.");
   return true;
+}
+
+void restartExperiment() {
+  experimentOngoing = false;
+  experimentReceiving = false;
+  experimentCounter = 0;
+  experimentStartTime = 0;
+  SerialBT.flush();
 }
