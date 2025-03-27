@@ -10,6 +10,7 @@ boolean experimentOngoing = false;
 int experimentCounter = 1;
 boolean experimentReceiving = false;
 unsigned long experimentStartTime = 0;
+unsigned long experimentId = 0;
 
 boolean connectToBounceBackController();
 void restartExperiment();
@@ -33,6 +34,8 @@ void setup() {
   }
 
   Serial.println("Device is ready for action.");
+  Serial.println();
+  Serial.println("id,start_time,end_time,num_of_passes,");
 }
 
 void loop() {
@@ -42,7 +45,7 @@ void loop() {
   if (!experimentOngoing) {
     boolean buttonState = digitalRead(BUTTON_PIN) == LOW;
     if (!lastButtonState && buttonState && !experimentOngoing) {
-      Serial.println("Starting Experiment.");
+      DEBUG_PRINT("Starting Experiment.");
       experimentOngoing = true;
       experimentStartTime = millis();
     };
@@ -57,11 +60,6 @@ void loop() {
     if (experimentReceiving) {
       if (SerialBT.available()) {
         int data = SerialBT.read();
-        // if (data != experimentCounter - 1) {
-        //   DEBUG_PRINT("Received signal %d, but expected %d. Restarting experiment....\n", data, experimentCounter - 1);
-        //   restartExperiment();
-        //   return;
-        // }
 
         experimentCounter++;
         experimentReceiving = false;
@@ -78,7 +76,8 @@ void loop() {
 
     // End experiment
     if (experimentCounter >= EXPERIMENT_NUM_SIGNALS) {
-      Serial.printf("Experiment completed after %dms.\n", millis() - experimentStartTime);
+      DEBUG_PRINT("Experiment completed after %dms.\n", millis() - experimentStartTime);
+      Serial.printf("%d,%lu,%lu,%d,\n", experimentId, experimentStartTime, millis(), experimentCounter);
       restartExperiment();
     }
   }
@@ -95,9 +94,14 @@ boolean connectToBounceBackController() {
 }
 
 void restartExperiment() {
-  experimentOngoing = false;
-  experimentReceiving = false;
+#ifdef NON_STOP_EXPERIMENT
+  experimentOngoing = true;
+#else
+experimentOngoing = false;
+#endif
+
   experimentCounter = 0;
-  experimentStartTime = 0;
+  experimentStartTime = millis();
+  experimentId++;
   SerialBT.flush();
 }
