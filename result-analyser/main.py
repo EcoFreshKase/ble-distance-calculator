@@ -26,15 +26,19 @@ def calcDeviation(csv_path) -> Dict[str, float]:
         "durationData": duration
     }
 
+def plotDataSet(data_set: pd.DataFrame, color="b", title='data'):
+    plt.plot(data_set['id'], (data_set['end_time'] - data_set['start_time']) / 1000, marker='o', linestyle='None', color=color, label=title)
+
 res1 = calcDeviation(csv_path_1)
 res2 = calcDeviation(csv_path_2)
 
 print(f"Measurement result 1: {res1["mean"]} +/- {res1["deviation"]} ms")
 print(f"Measurement result 2: {res2["mean"]} +/- {res2["deviation"]} ms")
 
+
 plt.figure(figsize=(10, 6))
-plt.plot(res1["df"]['id'], res1["durationData"] / 1000, marker='o', linestyle='None', color='b', label='res1 Data')
-plt.plot(res2["df"]['id'], res2["durationData"] / 1000, marker='o', linestyle='None', color='r', label='res2 Data')
+plotDataSet(res1["df"], color='b', title='res1')
+plotDataSet(res2["df"], color='r', title='res2')
 plt.xlabel('ID')
 plt.ylabel('Duration in s')
 plt.title('Duration in s over time')
