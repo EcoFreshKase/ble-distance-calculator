@@ -6,6 +6,7 @@ from typing import Dict
 
 csv_path_1 = os.path.join("resources", "experiment_2.csv")
 csv_path_2 = os.path.join("resources", "experiment_3.csv")
+csv_path_3 = os.path.join("resources", "experiment_4.csv")
 measurement_device_deviation = 1 # ms
 
 def calcDeviation(csv_path) -> Dict[str, float]:
@@ -31,14 +32,17 @@ def plotDataSet(data_set: pd.DataFrame, color="b", title='data'):
 
 res1 = calcDeviation(csv_path_1)
 res2 = calcDeviation(csv_path_2)
+res3 = calcDeviation(csv_path_3)
 
 print(f"Measurement result 1: {res1["mean"]} +/- {res1["deviation"]} ms")
 print(f"Measurement result 2: {res2["mean"]} +/- {res2["deviation"]} ms")
+print(f"Measurement result 3: {res3["mean"]} +/- {res3["deviation"]} ms")
 
 
 plt.figure(figsize=(10, 6))
 plotDataSet(res1["df"], color='b', title='res1')
 plotDataSet(res2["df"], color='r', title='res2')
+plotDataSet(res3["df"], color='y', title='res3')
 plt.xlabel('ID')
 plt.ylabel('Duration in s')
 plt.title('Duration in s over time')
