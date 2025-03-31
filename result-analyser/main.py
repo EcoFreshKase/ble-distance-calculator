@@ -4,6 +4,7 @@ import os
 import argparse
 from math import sqrt
 from typing import Dict
+from matplotlib import cm
 
 def calcDeviation(csv_path: str, measurement_device_deviation: int) -> Dict[str, float]:
     df = pd.read_csv(csv_path)
@@ -42,9 +43,9 @@ if __name__ == "__main__":
 
     if args.plot:
         plt.figure(figsize=(10, 6))
-        colors = ['b', 'r', 'g', 'y', 'c', 'm', 'k']
+        colorMap = cm.get_cmap('viridis', len(results))
         for i, (res, csv_path) in enumerate(results):
-            color = colors[i % len(colors)]
+            color = colorMap(i / len(results))
             plotDataSet(res["df"], color=color, title=os.path.basename(csv_path))
         plt.xlabel('ID')
         plt.ylabel('Duration in s')
