@@ -1,10 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import argparse
 from math import sqrt
 from typing import Dict
 
-def calcDeviation(csv_path) -> Dict[str, float]:
+def calcDeviation(csv_path: str, measurement_device_deviation: int) -> Dict[str, float]:
     df = pd.read_csv(csv_path)
 
     duration = df['end_time'] - df["start_time"]
@@ -26,26 +27,31 @@ def plotDataSet(data_set: pd.DataFrame, color="b", title='data'):
     plt.plot(data_set['id'], (data_set['end_time'] - data_set['start_time']) / 1000, marker='o', linestyle='None', color=color, label=title)
 
 if __name__ == "__main__":
-    csv_path_1 = os.path.join("resources", "experiment_2.csv")
-    csv_path_2 = os.path.join("resources", "experiment_3.csv")
-    csv_path_3 = os.path.join("resources", "experiment_4.csv")
-    measurement_device_deviation = 1 # ms
+    parser = argparse.ArgumentParser(description='Processes distance measurement data.')
+    parser.add_argument('csv_path', type=str, nargs='+', help='Paths to the CSV files')
+    parser.add_argument('--device_deviation', '-d', required=True, type=int, help='Measurement device deviation in ms')
+    parser.add_argument('--plot', action='store_true', help='Plot the data')
 
-    res1 = calcDeviation(csv_path_1)
-    res2 = calcDeviation(csv_path_2)
-    res3 = calcDeviation(csv_path_3)
+    args = parser.parse_args()
+    measurement_device_deviation = args.device_deviation # ms
 
-    print(f"Measurement result 1: {res1['mean']} +/- {res1['deviation']} ms")
-    print(f"Measurement result 2: {res2['mean']} +/- {res2['deviation']} ms")
-    print(f"Measurement result 3: {res3['mean']} +/- {res3['deviation']} ms")
+    results = [(calcDeviation(csv_path, measurement_device_deviation), csv_path) for csv_path in args.csv_path]
 
-    plt.figure(figsize=(10, 6))
-    plotDataSet(res1["df"], color='b', title='res1')
-    plotDataSet(res2["df"], color='r', title='res2')
-    plotDataSet(res3["df"], color='y', title='res3')
-    plt.xlabel('ID')
-    plt.ylabel('Duration in s')
-    plt.title('Duration in s over time')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
+    for res, csv_path in results:
+        print(f"{os.path.basename(csv_path)}: {res['mean']} +/- {res['deviation']} ms")
+
+    if args.plot:
+        plt.figure(figsize=(10, 6))
+        colors = ['b', 'r', 'g', 'y', 'c', 'm', 'k']
+        for i, (res, csv_path) in enumerate(results):
+            color = colors[i % len(colors)]
+            plotDataSet(res["df"], color=color, title=os.path.basename(csv_path))
+        plt.xlabel('ID')
+        plt.ylabel('Duration in s')
+        plt.title('Duration in s over time')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+# cur command:
+# -d 1 --plot resources/experiment_2.csv resources/experiment_3.csv resources/experiment_4.csv
