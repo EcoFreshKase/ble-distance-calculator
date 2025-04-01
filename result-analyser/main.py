@@ -55,6 +55,7 @@ def calcTcn(csv_path: str, measurement_device_deviation: int, tcn_distance: int)
     return tcn
 
 if __name__ == "__main__":
+    print()
     parser = argparse.ArgumentParser(description='Processes distance measurement data.')
     parser.add_argument('csv_path', type=str, nargs='+', help='Paths to the CSV files')
     parser.add_argument('--device_deviation', '-d', required=True, type=int, help='Measurement device deviation in ms')
@@ -73,9 +74,11 @@ if __name__ == "__main__":
     results = [(calcDeviation(csv_path, measurement_device_deviation, tcn['mean']), csv_path) for csv_path in args.csv_path]
 
     for res, csv_path in results:
-        print(f"{os.path.basename(csv_path)}: {res['mean']} +/- {res['deviation']} ms")
         distance = calculateDistance(res, res['numOfBounceBack'])
-        print(f"{os.path.basename(csv_path)}: {distance['distance']} +/- {distance['deviation']} mm")
+        print(f"""{os.path.basename(csv_path)}:
+              {res['mean']} +/- {res['deviation']} ms
+              {distance['distance']} +/- {distance['deviation']} mm
+              """)
 
     if args.plot:
         plt.figure(figsize=(10, 6))
