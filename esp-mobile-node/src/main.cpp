@@ -33,9 +33,7 @@ void setup() {
     ESP.restart();
   }
 
-  Serial.println("Device is ready for action.");
-  Serial.println();
-  Serial.println("id,start_time,end_time,num_of_passes,");
+  Serial.printf("%s is ready for action.\n\n", DEVICE_NAME);
 }
 
 void loop() {
@@ -45,7 +43,9 @@ void loop() {
   if (!experimentOngoing) {
     boolean buttonState = digitalRead(BUTTON_PIN) == LOW;
     if (!lastButtonState && buttonState && !experimentOngoing) {
-      DEBUG_PRINT("Starting Experiment.");
+      Serial.println("Starting Experiment.");
+      Serial.println("id,start_time,end_time,num_of_passes,");
+
       experimentOngoing = true;
       experimentStartTime = millis();
     };
