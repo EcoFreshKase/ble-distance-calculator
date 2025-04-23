@@ -58,7 +58,7 @@ if __name__ == "__main__":
     print()
     parser = argparse.ArgumentParser(description='Processes distance measurement data.')
     parser.add_argument('csv_path', type=str, nargs='+', help='Paths to the CSV files')
-    parser.add_argument('--device_deviation', '-d', required=True, type=int, help='Measurement device deviation in ms')
+    parser.add_argument('--device_deviation', '-d', required=True, type=float, help='Measurement device deviation in ms')
     parser.add_argument('--plot', action='store_true', help='Plot the data')
     parser.add_argument('--tcn', type=str, nargs=2, metavar=('CSV_PATH', 'DISTANCE'), required=True,
                         help='TCN arguments. Takes the path to the csv file containing the measurement data to calculate tcn and an the distance of the tcn measurement in millimeters.')
