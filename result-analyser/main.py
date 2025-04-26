@@ -6,7 +6,8 @@ from math import sqrt
 from typing import Dict, TypedDict
 from matplotlib import colormaps
 
-speedOfLight = 299792.458 # m/ms
+# speedOfLight = 299792.458 # m/ms speed of light in vacuum
+speedOfLight = 299702.547 # m/ms speed of light in air
 
 class DeviatedResult(TypedDict):
     mean: float
