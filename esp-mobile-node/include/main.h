@@ -10,9 +10,9 @@
   #define DEBUG_PRINT(...)
 #endif
 
-const char DEVICE_NAME_ESP_BOUNCE_BACK[] = "esp-bounce-back-1m";
+const char DEVICE_NAME_ESP_BOUNCE_BACK[] = "esp-bounce-node-5m-2";
 const int BUTTON_PIN = 18;
-const char DEVICE_NAME[] = "esp-mobile-node-1m";
+const char DEVICE_NAME[] = "esp-mobile-node-5m-2";
 
 const int EXPERIMENT_NUM_SIGNALS = 1000;
 

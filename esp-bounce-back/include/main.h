@@ -9,6 +9,6 @@
   #define DEBUG_PRINT(...)
 #endif
 
-const char DEVICE_NAME[] = "esp-bounce-back";
+const char DEVICE_NAME[] = "esp-bounce-node-5m-2";
 
 #endif
