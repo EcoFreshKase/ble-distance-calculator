@@ -101,4 +101,4 @@ if __name__ == "__main__":
         plt.show()
 
 # cur command:
-# -d 1 --plot --tcn resources/experiment_5.csv 1000 resources/experiment_3.csv resources/experiment_5.csv
+# -d 1 --plot --tcn resources/2m_tcn.csv 2000 resources/1m.csv resources/2m.csv resources/5m.csv resources/2m_tcn.csv
