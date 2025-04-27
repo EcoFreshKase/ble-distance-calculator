@@ -96,8 +96,8 @@ if __name__ == "__main__":
         plt.xlabel('Number of measurement')
         plt.ylabel('Duration in s')
         plt.title('Duration in s over time')
-        plt.legend()
-        plt.grid(True)
+        plt.legend(title="Dataset")
+        # plt.grid(True)
         plt.show()
 
 # cur command:
