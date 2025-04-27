@@ -5,6 +5,7 @@ import argparse
 from math import sqrt
 from typing import Dict, TypedDict
 from matplotlib import colormaps
+import seaborn as sns
 
 # speedOfLight = 299792.458 # m/ms speed of light in vacuum
 speedOfLight = 299702.547 # m/ms speed of light in air
@@ -83,11 +84,16 @@ if __name__ == "__main__":
 
     if args.plot:
         plt.figure(figsize=(10, 6))
-        colorMap = colormaps['viridis']
+        palette = sns.color_palette("husl")
         for i, (res, csv_path) in enumerate(results):
-            color = colorMap(i / len(results))
-            plotDataSet(res["df"], color=color, title=os.path.basename(csv_path))
-        plt.xlabel('ID')
+            color = palette[i % len(palette)]
+            sns.lineplot(
+                x=res["df"]['id'], 
+                y=(res["df"]['end_time'] - res["df"]['start_time']) / 1000, 
+                color=color,
+                label=os.path.basename(csv_path).split('.')[:-1]
+            )
+        plt.xlabel('Number of measurement')
         plt.ylabel('Duration in s')
         plt.title('Duration in s over time')
         plt.legend()

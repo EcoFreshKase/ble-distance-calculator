@@ -10,7 +10,7 @@ Experiment 5 and 6 was made (in the office) with 1000 bounce backs at a distance
 
 ## Final Experiments
 
-Experiment 7 was made with 1000 bounce backs at a distance of 1m.
-Experiment 8 was made with 1000 bounce backs at a distance of 2m.
-Experiment 9 was made with 1000 bounce backs at a distance of 2m, to calculate tcn.
-Experiment 10 was made with 1000 bounce backs at a distance of 5m.
+1m.csv was made with 1000 bounce backs at a distance of 1m.
+2m.csv was made with 1000 bounce backs at a distance of 2m.
+2m_tcn.csv was made with 1000 bounce backs at a distance of 2m, to calculate tcn.
+10m.csv was made with 1000 bounce backs at a distance of 5m.
